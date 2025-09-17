@@ -1,0 +1,178 @@
+<style type="text/css">
+	.error{text-align: left; font-size: 13px; color: #c71407;}
+	.form-group {margin-bottom: 1rem;}
+	.field, .submit_button{padding: 7px; width: 230px;}
+	.submit_button{cursor: pointer;}
+	.formloader{width: 20px;display: inline-block; vertical-align: middle;}
+	.hidden{display: none;}
+</style>
+
+<form name="leadForm" id="leadForm" method="post" action="https://lms.dvio.global/get-lead-count.php">
+	<?php
+	if(!isset($_GET['campaign'])){ $_GET['campaign'] = '';}
+	if(!isset($_GET['keyword'])){ $_GET['keyword'] = '';}              
+	if(!isset($_GET['adgroup'])){ $_GET['adgroup'] = '';}              
+	if(!isset($_GET['adtype'])){ $_GET['adtype'] = '';}              
+	?>
+	<div class="form-group">
+		<input type="text" value="" placeholder="Name *" name="p_user_nm" id="p_user_nm" class="field" />
+		<div class="error"></div>
+	</div>
+	<div class="form-group">
+		<input type="text" value="" placeholder="Email *" name="emailid" id="emailid" class="field" />
+		<div class="error"></div>
+	</div>
+	<div class="form-group">
+		<input type="text" value="" placeholder="Mobile *" name="p_user_mob" id="p_user_mob" maxlength="10" class="field" />
+		<div class="error"></div>
+	</div>
+	<div class="form-group">
+		<input type="text" value="" placeholder="City *" name="city" id="city" class="field" />
+		<div class="error"></div>
+	</div>
+	<div class="form-group">
+		<input type="text" value="" placeholder="Query *" name="query" id="query" class="field" />
+		<div class="error"></div>
+	</div>
+	<div class="form-group">
+		<select name="course_type" id="selectprogram" class="field">
+			<option value="-1" disabled selected>Select Program *</option>
+			<option value="Program1">Program1</option>
+			<option value="Program2">Program2</option>
+			<option value="Program3">Program3</option>
+		</select>
+		<div class="error"></div>
+	</div>
+	<input type="hidden" value="" name="ud1" id="ud1" class="field" />
+	<input type="hidden" value="" name="ud2" id="ud2" class="field" />
+	<input type="hidden" value="" name="ud3" id="ud3" class="field" />
+	<input type="hidden" value="" name="ud4" id="ud4" class="field" />
+	<input type="hidden" value="" name="ud5" id="ud5" class="field" />
+	<input type="hidden" value="" name="ud6" id="ud6" class="field" />
+	<input type="hidden" value="" name="ud7" id="ud7" class="field" />
+	<input type="hidden" value="" name="ud8" id="ud8" class="field" />
+	<input type="hidden" value="" name="ud9" id="ud9" class="field" />
+	<input type="hidden" value="" name="ud10" id="ud10" class="field" />
+	<input type="hidden" name="p_ip_addsr" id="p_ip_addsr" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>"/>
+	<input type="hidden" name="p_data_source" id="campaign" value="<?php echo $_GET['campaign']; ?>" />
+	<input type="hidden" name="param1" id="adgroup" value="<?php echo $_GET['adgroup']; ?>" />
+	<input type="hidden" name="param2"  id="adtype" value="<?php echo $_GET['adtype']; ?>" />
+	<input type="hidden" name="param3" id="keyword" value="<?php echo $_GET['keyword']; ?>"  />
+	<input type="hidden" name="url"  id="url" value="<?php echo $_SERVER['REQUEST_URI']; ?>" />
+	<input type="hidden" name="lead_from" id="lead_from" value="Desktop" />
+	<input type="hidden" name="campaign_name" id="campaign_name" value="DViO-Test-Campaign" />
+	<input type="hidden" name="retURL" id="retURL" value="RETURN URL TO BE ADDED HERE" />
+	<input type="hidden" name="selfURL" id="selfURL" value='<?php echo $_SERVER["REQUEST_SCHEME"]."://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];  ?>' />
+	<button type="submit" id="submitLeadForm" name="submit_lead_form" class="submit_button">Submit Now <img src="https://lms.dvio.global/assets/loader.gif" class="formloader hidden" /></button>
+</form>
+
+<script type="text/javascript" src="https://lms.dvio.global/assets/jquery.min.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function($){
+		var characterReg = /^\s*[a-zA-Z\s]+\s*$/;
+		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+		var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+		if(jQuery('input[name="lead_from"]').length){
+			if(jQuery(window).width() > 767){ 
+				var device = 'Desktop';
+			} else{
+				var device = 'Mobile';
+			}
+			jQuery('input[name="lead_from"]').val(device);
+		}
+
+		jQuery("#submitLeadForm").on('click', function(){
+			var result = true;
+			var focus = false;            
+			var name = jQuery('#p_user_nm').val();
+			var email = jQuery('#emailid').val();
+			var mobile = jQuery('#p_user_mob').val();
+			var city = jQuery('#city').val();
+			var query = jQuery('#query').val();
+			var program = jQuery('#selectprogram').val();
+			if(name == '') {
+				jQuery('#leadForm #p_user_nm').closest('.form-group').find('.error').html('The Name field is required.');
+				if(!focus){ focus = 'p_user_nm'; }
+				result = false;
+			}
+			else if(!characterReg.test(name)) {
+				jQuery('#leadForm #p_user_nm').closest('.form-group').find('.error').html('Please Enter a Valid Name');
+				if(!focus){ focus = 'p_user_nm'; }
+				result = false;
+			}
+			else{
+				jQuery('#leadForm #p_user_nm').closest('.form-group').find('.error').html('');
+			}
+
+			if(email == '') {
+				jQuery('#leadForm #emailid').closest('.form-group').find('.error').html('The Email field is required.');
+				if(!focus){ focus = 'emailid'; }
+				result = false;
+			}
+			else if(!emailReg.test(email)) {
+				jQuery('#leadForm #emailid').closest('.form-group').find('.error').html('Please Enter a Valid Email Address');
+				if(!focus){ focus = 'emailid'; }
+				result = false;
+			}
+			else{
+				jQuery('#leadForm #emailid').closest('.form-group').find('.error').html('');
+			}
+
+			if(mobile == '') {
+				jQuery('#leadForm #p_user_mob').closest('.form-group').find('.error').html('The Mobile Number field is required.');
+				if(!focus){ focus = 'p_user_mob'; }
+				result = false;
+			}
+			else if(!numericReg.test(mobile)) {
+				jQuery('#leadForm #p_user_mob').closest('.form-group').find('.error').html('Please Enter a Valid Mobile Number');
+				if(!focus){ focus = 'p_user_mob'; }
+				result = false;
+			}
+			else if(mobile.length != 10) {
+				jQuery('#leadForm #p_user_mob').closest('.form-group').find('.error').html('Please Enter 10 Digit Mobile Number');
+				if(!focus){ focus = 'p_user_mob'; }
+				result = false;
+			}
+			else{
+				jQuery('#leadForm #p_user_mob').closest('.form-group').find('.error').html('');
+			}
+
+			if(city == '') {
+				jQuery('#leadForm #city').closest('.form-group').find('.error').html('The City field is required.');
+				if(!focus){ focus = 'city'; }
+				result = false;
+			}
+			else{
+				jQuery('#leadForm #city').closest('.form-group').find('.error').html('');
+			}
+
+			if(query == '') {
+				jQuery('#leadForm #query').closest('.form-group').find('.error').html('The Query field is required.');
+				if(!focus){ focus = 'query'; }
+				result = false;
+			}
+			else{
+				jQuery('#leadForm #query').closest('.form-group').find('.error').html('');
+			}
+
+			if(program == '' || program == null) {
+				jQuery('#leadForm #selectprogram').closest('.form-group').find('.error').html('The Program field is required.');
+				if(!focus){ focus = 'selectprogram'; }
+				result = false;
+			}
+			else{
+				jQuery('#leadForm #selectprogram').closest('.form-group').find('.error').html('');
+			}
+
+			if(result){
+				//Validation Success
+				jQuery("#submitLeadForm").attr('disabled', 'disabled');
+				if(jQuery('.formloader').length){ jQuery('.formloader').removeClass('hidden'); }
+				jQuery("#leadForm").submit();
+			}
+
+			if(focus){ jQuery('#leadForm #'+focus).focus(); }
+			return result;
+		});
+	});
+</script>
